@@ -81,7 +81,7 @@ const LandingPage = () => {
   // Prepare data for Recharts
   const chartData = portifolioReturns.map((value, index) => ({
     name: index + 1,
-    value: round(value, 3),
+    value: round(value, 2),
   }));
 
   return (
@@ -162,7 +162,7 @@ const LandingPage = () => {
       {montanteFinal !== null && (
         <div className="mt-10 w-full max-w-4xl bg-white p-6 rounded-lg shadow-lg">
           <h2 className="text-2xl font-bold mb-4">
-            Montante Final: R$ {round(montanteFinal, 3)}
+            Montante Final: R$ {round(montanteFinal, 2)}
           </h2>
           <LineChart
             width={800}
