@@ -8,6 +8,8 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
+import dotenv from "dotenv";
+dotenv.config();
 
 const LandingPage = () => {
   const [formData, setFormData] = useState({
@@ -17,6 +19,7 @@ const LandingPage = () => {
     stocks: [],
     initial_investiment: 0,
   });
+
   const [montanteFinal, setMontanteFinal] = useState(null);
   const [portifolioReturns, setPortifolioReturns] = useState([]);
 
@@ -49,7 +52,7 @@ const LandingPage = () => {
       initial_investiment: parseFloat(formData.initial_investiment),
     };
 
-    fetch("http://127.0.0.1:8000/start_test/", {
+    fetch(process.env.BACKEND_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
