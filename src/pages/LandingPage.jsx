@@ -8,8 +8,6 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import dotenv from "dotenv";
-dotenv.config();
 
 const LandingPage = () => {
   const [formData, setFormData] = useState({
