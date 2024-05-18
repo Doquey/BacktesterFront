@@ -61,7 +61,7 @@ const LandingPage = () => {
       initial_investiment: parseFloat(formData.initial_investiment),
     };
 
-    fetch(process.env.BACKEND_URL, {
+    fetch("https://backend-tester-4wzc.onrender.com/start_test/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
