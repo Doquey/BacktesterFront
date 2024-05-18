@@ -7,6 +7,8 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  BarChart,
+  Bar,
 } from "recharts";
 
 const LandingPage = () => {
@@ -20,6 +22,8 @@ const LandingPage = () => {
 
   const [montanteFinal, setMontanteFinal] = useState(null);
   const [portifolioReturns, setPortifolioReturns] = useState([]);
+  const [stockData, setStockData] = useState([]);
+  // Example stock data for the bar chart
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,6 +44,13 @@ const LandingPage = () => {
     }));
   };
 
+  const handleStockRemove = (indexToRemove) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      stocks: prevState.stocks.filter((_, index) => index !== indexToRemove),
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -50,7 +61,7 @@ const LandingPage = () => {
       initial_investiment: parseFloat(formData.initial_investiment),
     };
 
-    fetch("https://backend-tester-4wzc.onrender.com/start_test/", {
+    fetch(process.env.BACKEND_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -66,6 +77,7 @@ const LandingPage = () => {
       .then((data) => {
         setMontanteFinal(data.montante_final);
         setPortifolioReturns(data.portifolio_returns);
+        setStockData(data.return_per_stock);
       })
       .catch((error) => {
         console.error(
@@ -78,17 +90,28 @@ const LandingPage = () => {
   const round = (value, decimals) => {
     return Number(Math.round(value + "e" + decimals) + "e-" + decimals);
   };
+
   // Prepare data for Recharts
   const chartData = portifolioReturns.map((value, index) => ({
     name: index + 1,
     value: round(value, 2),
   }));
 
+  const barChartData = Object.entries(stockData).map(([key, value]) => ({
+    name: key,
+    value: round(value, 2),
+  }));
+
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-500 to-purple-600 flex flex-col items-center py-10">
-      <h1 className="text-4xl font-bold text-white mb-10">
-        Bem vindo ao BR Portifolio Backtester
+      <h1 className="text-5xl font-extrabold text-white mb-4 animate-bounce">
+        Bem vindo ao <span className="text-yellow-400">BRBT</span>
       </h1>
+      <p className="text-lg text-gray-200 max-w-2xl mx-auto mb-8">
+        Utilize nossa plataforma para testar diferentes estratégias de
+        investimento, e obtenha insights valiosos sobre o desempenho histórico
+        de suas carteiras.
+      </p>
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg"
@@ -154,15 +177,24 @@ const LandingPage = () => {
       </form>
       <ul className="mt-10 space-y-2 w-full max-w-md">
         {formData.stocks.map((stock, index) => (
-          <li key={index} className="px-4 py-2 bg-white rounded-lg shadow-md">
+          <li
+            key={index}
+            className="px-4 py-2 bg-white rounded-lg shadow-md flex justify-between items-center"
+          >
             {stock}
+            <button
+              onClick={() => handleStockRemove(index)}
+              className="ml-2 px-2 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
+            >
+              &times;
+            </button>
           </li>
         ))}
       </ul>
       {montanteFinal !== null && (
         <div className="mt-10 w-full max-w-4xl bg-white p-6 rounded-lg shadow-lg">
           <h2 className="text-2xl font-bold mb-4">
-            Montante Final: R$ {round(montanteFinal, 2)}
+            Montante total : {round(montanteFinal, 2)}
           </h2>
           <LineChart
             width={800}
@@ -187,6 +219,29 @@ const LandingPage = () => {
               activeDot={{ r: 8 }}
             />
           </LineChart>
+        </div>
+      )}
+      {montanteFinal !== null && (
+        <div className="mt-10 w-full max-w-4xl bg-white p-6 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-bold mb-4">Retorno por ação</h2>
+          <BarChart
+            width={800}
+            height={400}
+            data={barChartData}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="value" fill="#82ca9d" />
+          </BarChart>
         </div>
       )}
     </div>
