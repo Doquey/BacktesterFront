@@ -23,7 +23,6 @@ const LandingPage = () => {
   const [montanteFinal, setMontanteFinal] = useState(null);
   const [portifolioReturns, setPortifolioReturns] = useState([]);
   const [stockData, setStockData] = useState([]);
-  // Example stock data for the bar chart
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -91,7 +90,6 @@ const LandingPage = () => {
     return Number(Math.round(value + "e" + decimals) + "e-" + decimals);
   };
 
-  // Prepare data for Recharts
   const chartData = portifolioReturns.map((value, index) => ({
     name: index + 1,
     value: round(value, 2),
@@ -103,11 +101,11 @@ const LandingPage = () => {
   }));
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-500 to-purple-600 flex flex-col items-center py-10">
-      <h1 className="text-5xl font-extrabold text-white mb-4 animate-bounce">
+    <div className="min-h-screen bg-gradient-to-r from-blue-500 to-purple-600 flex flex-col items-center py-10 px-4 sm:px-6 lg:px-8">
+      <h1 className="text-5xl font-extrabold text-white mb-4 animate-bounce text-center">
         Bem vindo ao <span className="text-yellow-400">BRBT</span>
       </h1>
-      <p className="text-lg text-gray-200 max-w-2xl mx-auto mb-8">
+      <p className="text-lg text-gray-200 max-w-2xl mx-auto mb-8 text-center">
         Utilize nossa plataforma para testar diferentes estratégias de
         investimento, e obtenha insights valiosos sobre o desempenho histórico
         de suas carteiras.
@@ -196,52 +194,56 @@ const LandingPage = () => {
           <h2 className="text-2xl font-bold mb-4">
             Montante total : {round(montanteFinal, 2)}
           </h2>
-          <LineChart
-            width={800}
-            height={400}
-            data={chartData}
-            margin={{
-              top: 5,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line
-              type="monotone"
-              dataKey="value"
-              stroke="#8884d8"
-              activeDot={{ r: 8 }}
-            />
-          </LineChart>
+          <div className="overflow-x-auto">
+            <LineChart
+              width={800}
+              height={400}
+              data={chartData}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="value"
+                stroke="#8884d8"
+                activeDot={{ r: 8 }}
+              />
+            </LineChart>
+          </div>
         </div>
       )}
       {montanteFinal !== null && (
         <div className="mt-10 w-full max-w-4xl bg-white p-6 rounded-lg shadow-lg">
           <h2 className="text-2xl font-bold mb-4">Retorno por ação</h2>
-          <BarChart
-            width={800}
-            height={400}
-            data={barChartData}
-            margin={{
-              top: 5,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="value" fill="#82ca9d" />
-          </BarChart>
+          <div className="overflow-x-auto">
+            <BarChart
+              width={800}
+              height={400}
+              data={barChartData}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="value" fill="#82ca9d" />
+            </BarChart>
+          </div>
         </div>
       )}
     </div>
